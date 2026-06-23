@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 26 — Canada · Mexico · USA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===================== LOGIN GATE ===================== -->
+<div id="gate" class="gate">
+  <div class="gate-bg" aria-hidden="true">
+    <div class="floodlight fl-1"></div>
+    <div class="floodlight fl-2"></div>
+    <div class="pitch-lines"></div>
+  </div>
+
+  <div class="gate-card">
+    <div class="gate-brand">
+      <span class="gate-brand-mark">⚽</span>
+      <span class="gate-brand-text">WORLD CUP <strong>26</strong></span>
+    </div>
+    <p class="gate-eyebrow">CANADA · MEXICO · USA</p>
+
+    <div class="gate-tabs" role="tablist">
+      <button class="gate-tab is-active" data-tab="login" role="tab" aria-selected="true">Log in</button>
+      <button class="gate-tab" data-tab="signup" role="tab" aria-selected="false">Create account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm" class="gate-form" autocomplete="off">
+      <label class="field">
+        <span class="field-label">Username</span>
+        <input type="text" id="loginUser" placeholder="e.g. golden_boot" required>
+      </label>
+      <label class="field">
+        <span class="field-label">Password</span>
+        <input type="password" id="loginPass" placeholder="••••••••" required>
+      </label>
+      <p class="field-error" id="loginError" role="alert"></p>
+      <button type="submit" class="btn-primary">Enter the stadium</button>
+      <button type="button" class="btn-ghost" id="guestBtn">Continue as guest</button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form id="signupForm" class="gate-form" autocomplete="off" hidden>
+      <label class="field">
+        <span class="field-label">Choose a username</span>
+        <input type="text" id="signupUser" placeholder="e.g. golden_boot" required minlength="3">
+      </label>
+      <label class="field">
+        <span class="field-label">Choose a password</span>
+        <input type="password" id="signupPass" placeholder="At least 4 characters" required minlength="4">
+      </label>
+      <label class="field">
+        <span class="field-label">Favourite team (optional)</span>
+        <input type="text" id="signupTeam" placeholder="e.g. Argentina">
+      </label>
+      <p class="field-error" id="signupError" role="alert"></p>
+      <button type="submit" class="btn-primary">Create account &amp; enter</button>
+    </form>
+
+    <p class="gate-note">Local demo login — your account stays on this device only.</p>
+  </div>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<div id="app" class="app" hidden>
+
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="brand-mark">⚽</span>
+      <span class="brand-text">WORLD CUP <strong>26</strong></span>
+    </div>
+
+    <nav class="topnav" id="topnav" aria-label="Primary">
+      <button class="nav-link is-active" data-view="home">Home</button>
+      <button class="nav-link" data-view="matches">Matches</button>
+      <button class="nav-link" data-view="standings">Standings</button>
+      <button class="nav-link" data-view="scorers">Top Scorers</button>
+      <button class="nav-link" data-view="stadiums">Stadiums</button>
+    </nav>
+
+    <div class="topbar-user">
+      <span class="user-chip"><span id="userInitial">G</span></span>
+      <span class="user-name" id="userNameDisplay">Guest</span>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <!-- mobile nav -->
+  <nav class="mobnav" id="mobnav" aria-label="Primary mobile">
+    <button class="mobnav-link is-active" data-view="home"><span>🏠</span>Home</button>
+    <button class="mobnav-link" data-view="matches"><span>📅</span>Matches</button>
+    <button class="mobnav-link" data-view="standings"><span>📊</span>Groups</button>
+    <button class="mobnav-link" data-view="scorers"><span>🥇</span>Scorers</button>
+    <button class="mobnav-link" data-view="stadiums"><span>🏟️</span>Venues</button>
+  </nav>
+
+  <main class="main">
+
+    <!-- ---------- HOME / HERO ---------- -->
+    <section id="view-home" class="view is-active">
+      <section class="hero">
+        <div class="hero-text">
+          <p class="hero-eyebrow">GROUP STAGE IN PROGRESS</p>
+          <h1 class="hero-title">104 MATCHES.<br>16 STADIUMS.<br><span class="hero-accent">ONE TROPHY.</span></h1>
+          <p class="hero-sub">Welcome back, <strong id="heroUserName">Guest</strong>. Here's where the 2026 FIFA World Cup stands right now across Canada, Mexico and the USA.</p>
+          <div class="hero-actions">
+            <button class="btn-primary" data-goto="matches">See all matches</button>
+            <button class="btn-ghost" data-goto="standings">View groups</button>
+          </div>
+        </div>
+
+        <div class="scoreboard" id="scoreboard" aria-label="Live scoreboard">
+          <div class="scoreboard-head">
+            <span class="dot dot-live"></span> FEATURED RESULT
+          </div>
+          <div class="scoreboard-body">
+            <div class="sb-team">
+              <span class="sb-flag" id="sbFlagA">🇦🇷</span>
+              <span class="sb-code" id="sbTeamA">ARG</span>
+            </div>
+            <div class="sb-score" id="sbScore">
+              <span class="sb-digit" id="sbScoreA">2</span>
+              <span class="sb-colon">:</span>
+              <span class="sb-digit" id="sbScoreB">0</span>
+            </div>
+            <div class="sb-team">
+              <span class="sb-flag" id="sbFlagB">🇩🇿</span>
+              <span class="sb-code" id="sbTeamB">ALG</span>
+            </div>
+          </div>
+          <div class="scoreboard-foot" id="sbFoot">FULL TIME · Arrowhead Stadium, Kansas City</div>
+        </div>
+      </section>
+
+      <section class="stats-strip">
+        <div class="stat-card">
+          <span class="stat-num">48</span>
+          <span class="stat-label">Teams</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">12</span>
+          <span class="stat-label">Groups</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">16</span>
+          <span class="stat-label">Host stadiums</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Host nations</span>
+        </div>
+      </section>
+
+      <section class="home-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Next up</h2>
+            <button class="link-btn" data-goto="matches">View schedule →</button>
+          </div>
+          <div id="upcomingList" class="match-mini-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Top scorers</h2>
+            <button class="link-btn" data-goto="scorers">Full list →</button>
+          </div>
+          <div id="scorersMiniList" class="scorer-mini-list"></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ---------- MATCHES ---------- -->
+    <section id="view-matches" class="view">
+      <div class="view-header">
+        <h1>Match Centre</h1>
+        <p>Every fixture of the 2026 FIFA World Cup — dates, kickoff times and stadiums.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-group" id="groupFilters">
+          <button class="chip is-active" data-group="all">All groups</button>
+        </div>
+        <div class="filter-group">
+          <button class="chip is-active" data-status="all">All</button>
+          <button class="chip" data-status="FT">Finished</button>
+          <button class="chip" data-status="UPCOMING">Upcoming</button>
+        </div>
+      </div>
+
+      <div id="matchList" class="match-list"></div>
+    </section>
+
+    <!-- ---------- STANDINGS ---------- -->
+    <section id="view-standings" class="view">
+      <div class="view-header">
+        <h1>Group Standings</h1>
+        <p>Top two from each group, plus the best eight third-placed teams, advance to the Round of 32.</p>
+      </div>
+      <div id="standingsGrid" class="standings-grid"></div>
+    </section>
+
+    <!-- ---------- TOP SCORERS ---------- -->
+    <section id="view-scorers" class="view">
+      <div class="view-header">
+        <h1>Top Scorers</h1>
+        <p>Leading the race for the Golden Boot at World Cup 2026.</p>
+      </div>
+      <div id="scorersTable" class="scorers-table"></div>
+    </section>
+
+    <!-- ---------- STADIUMS ---------- -->
+    <section id="view-stadiums" class="view">
+      <div class="view-header">
+        <h1>Host Stadiums</h1>
+        <p>16 venues across three countries are staging this World Cup.</p>
+      </div>
+      <div id="stadiumGrid" class="stadium-grid"></div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Built as a fan project · Not affiliated with FIFA · Data current as of June 23, 2026</p>
+  </footer>
+</div>
+
+<!-- Match detail modal -->
+<div id="matchModal" class="modal" hidden>
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
